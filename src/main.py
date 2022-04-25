@@ -1,6 +1,7 @@
 import pygame, sys
 from settings import *
 from tile import Tile
+from enemy import Enemy
 
 class Game():
     def __init__(self):
@@ -9,6 +10,10 @@ class Game():
         self.clock = pygame.time.Clock()
 
         self.tile_sprites = pygame.sprite.Group()
+        self.enemy_sprites = pygame.sprite.Group()
+
+        Enemy(self.enemy_sprites, "warrior", (0, 100))
+        Enemy(self.enemy_sprites, "goblin", (100, 120))
 
         self.setup_map()
 
@@ -28,7 +33,10 @@ class Game():
                     pygame.quit()
                     sys.exit()
 
+
             self.tile_sprites.draw(self.screen)
+            self.enemy_sprites.draw(self.screen)
+            self.enemy_sprites.update()
             pygame.display.update()
 
 
