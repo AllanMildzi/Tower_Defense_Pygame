@@ -11,14 +11,26 @@ class Tower(pygame.sprite.Sprite):
         self.tower_type = tower_type
         self.surfacemaker = surfacemaker
 
-        self.top_y = 60
-        self.image = self.surfacemaker.get_surf(self.tower_type, (TILE_WIDTH * 3 / 2, TILE_HEIGHT * 2), self.top_y)
+        self.top_y = 50
+        self.image = self.surfacemaker.get_surf(self.tower_type, (TOWER_RECT_WIDTH, TOWER_RECT_HEIGHT), self.top_y)
         self.rect = self.image.get_rect(center = self.pos)
         self.circle = Circle(self.pos, TILE_WIDTH * 2)
 
+        self.is_placed = False
         self.is_shooting = False
         self.projectile_sprites = pygame.sprite.Group()
-        self.projectile_sprites.add(Projectile(self.projectile_sprites, (self.pos.x, self.pos.y - 10)))
+        self.projectile_sprites.add(Projectile(self.projectile_sprites, "_".join(self.tower_type.split("_")[:2]), (self.pos.x, self.pos.y - 10)))
+
+        if tower_type == "stone_tower_1":
+            self.damage = 10
+        elif tower_type == "rock_tower_1":
+            self.damage = 50
+
+    def move_tower(self, pos):
+        self.rect.center = pos
+        self.circle.rect.center = pos
+        for projectile_sprite in self.projectile_sprites:
+            projectile_sprite.rect.center = pos
 
     def shooting_animation(self):
         self.top_y -= 1
@@ -27,13 +39,37 @@ class Tower(pygame.sprite.Sprite):
                 projectile.rect.y += 1
             else:
                 projectile.rect.y -= 1
+            if self.top_y == 0:
+                projectile.can_move = True
         
-        if abs(self.top_y) >= 60:
-            self.top_y = 60
+        if abs(self.top_y) >= 50:
+            self.top_y = 50
             self.is_shooting = False
-            self.projectile_sprites.add(Projectile(self.projectile_sprites, (self.pos.x, self.pos.y - 10)))
-        self.image = self.surfacemaker.get_surf(self.tower_type, (TILE_WIDTH * 3 / 2, TILE_HEIGHT * 2), abs(self.top_y))
+            if self.is_placed:
+                self.projectile_sprites.add(Projectile(self.projectile_sprites, "_".join(self.tower_type.split("_")[:2]), (self.pos.x, self.pos.y - 10)))
+        self.image = self.surfacemaker.get_surf(self.tower_type, (TOWER_RECT_WIDTH, TOWER_RECT_HEIGHT), abs(self.top_y))
 
-    def update(self):
+    def upgrade(self, money):
+        if self.tower_type == "stone_tower_1":
+            self.tower_type = "stone_tower_2"
+            self.circle.radius = TILE_WIDTH * 2.25
+            self.damage = 20
+        elif self.tower_type == "stone_tower_2":
+            self.tower_type = "stone_tower_3"
+            self.circle.radius = TILE_WIDTH * 2.5
+            self.damage = 40
+
+        elif self.tower_type == "rock_tower_1":
+            self.tower_type = "rock_tower_2"
+            self.circle.radius = TILE_WIDTH * 2.25
+            self.damage = 20
+        elif self.tower_type == "rock_tower_2":
+            self.tower_type = "rock_tower_3"
+            self.circle.radius = TILE_WIDTH * 2.5
+            self.damage = 40
+        self.image = self.surfacemaker.get_surf(self.tower_type, (TOWER_RECT_WIDTH, TOWER_RECT_HEIGHT), self.top_y)
+
+    def update(self, pos):
         self.circle.draw(self.screen)
-        pygame.draw.rect(self.screen, (0, 0, 0), self.rect, 2)
+        if not self.is_placed:
+            self.move_tower(pos)

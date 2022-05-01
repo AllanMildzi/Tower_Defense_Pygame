@@ -1,4 +1,5 @@
 import pygame, os
+from settings import *
 
 class SurfaceMaker():
     def __init__(self):
@@ -14,7 +15,7 @@ class SurfaceMaker():
 
     def get_surf(self, tower_type, size, current_y):
         image = pygame.Surface(size)
-        image.set_colorkey((0, 0, 0))
+        image.set_colorkey(BLACK)
 
         sides = self.assets[tower_type]
 

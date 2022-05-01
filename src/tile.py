@@ -7,6 +7,6 @@ class Tile(pygame.sprite.Sprite):
         self.tile_type = tile_type
         self.pos = pos
 
-        self.image = pygame.image.load(f"../graphics/tiles/{TILE_LEGEND[self.tile_type]}.png").convert_alpha()
-        self.image = pygame.transform.scale(self.image, (TILE_WIDTH, TILE_HEIGHT))
+        self.original_image = pygame.image.load(f"../graphics/tiles/{TILE_LEGEND[self.tile_type]}.png").convert_alpha()
+        self.image = pygame.transform.scale(self.original_image, (TILE_WIDTH, TILE_HEIGHT))
         self.rect = self.image.get_rect(topleft = pos)

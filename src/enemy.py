@@ -27,8 +27,9 @@ class Enemy(pygame.sprite.Sprite):
         self.pos = pygame.math.Vector2(self.rect.topleft)
         self.direction = pygame.math.Vector2(1, 1)
         self.speed = 1
+        self.is_target = False
 
-        self.health = 100
+        self.health = ENEMY_MAX_HEALTH
 
         self.top_path = [pygame.math.Vector2(self.pos),
                         pygame.math.Vector2(4 * TILE_WIDTH, self.pos.y),
@@ -65,9 +66,13 @@ class Enemy(pygame.sprite.Sprite):
                 self.index = 0
             else:
                 self.kill()
+                return False
+        
+        return True
 
     def draw_health_bar(self):
-        pygame.draw.rect(self.screen, GREEN, (self.rect.left, self.rect.top, self.rect.width / 2, 10))
+        pygame.draw.rect(self.screen, RED, (self.rect.left + 10, self.rect.top, ENEMY_MAX_HEALTH / 2, 10))
+        pygame.draw.rect(self.screen, GREEN, (self.rect.left + 10, self.rect.top, self.health / 2, 10))
 
     def get_damage(self, amount):
         self.health -= amount
@@ -101,9 +106,10 @@ class Enemy(pygame.sprite.Sprite):
 
         return True
 
-    def update(self):
-        self.animation_state()
+    def update(self, ui):
         self.draw_health_bar()
+        if not self.animation_state():
+            ui.money += 10
         if not self.update_path():
-            print("enemy killed")
+            ui.health -= 5
             self.kill()
