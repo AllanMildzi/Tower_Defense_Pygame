@@ -10,13 +10,9 @@ class Circle(pygame.sprite.Sprite):
         self.image.set_alpha(CIRCLE_ALPHA)
         
         self.radius = radius
-        self.color = CIRCLE_RED
-        self.pos = pos
-        
-        self.mask = pygame.mask.from_surface(self.image)
-        self.rect = self.image.get_rect(center = self.pos)
+        self.color = CIRCLE_RED        
+        self.rect = self.image.get_rect(center=pos)
     
     def draw(self, surface):
         pygame.draw.circle(self.image, self.color, (MAX_RADIUS / 2, MAX_RADIUS / 2), self.radius)
-        self.mask = pygame.mask.from_surface(self.image)
         surface.blit(self.image, self.rect)

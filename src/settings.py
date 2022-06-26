@@ -35,13 +35,21 @@ TOWER_RECT_WIDTH = TILE_WIDTH * 3 / 2
 TOWER_RECT_HEIGHT = TILE_HEIGHT * 1.8
 MAX_RADIUS = 5 * TILE_WIDTH
 CIRCLE_ALPHA = 60
+
+TOWER_PRICES = {"stone_tower_1": 500,
+                "rock_tower_1": 1000}
+
 UPGRADE_PRICES = {"stone_tower_1": 750,
                   "stone_tower_2": 2000,
                   "rock_tower_1": 1000,
                   "rock_tower_2": 2500}
 
 # Enemy settings
-ENEMY_MAX_HEALTH = 100
+ENEMY_TYPES = ("red_goblin", "green_goblin", "warrior", "orc")
+ENEMY_MAX_HEALTH = {ENEMY_TYPES[0]: 100,
+                    ENEMY_TYPES[1]: 120,
+                    ENEMY_TYPES[2]: 150,
+                    ENEMY_TYPES[3]: 200}
 
 # UI settings
 UI_WIDTH = 220

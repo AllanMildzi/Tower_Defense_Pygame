@@ -7,17 +7,19 @@ class Tower(pygame.sprite.Sprite):
     def __init__(self, group, pos, tower_type, surfacemaker):
         super().__init__(group)
         self.screen = pygame.display.get_surface()
-        self.pos = pygame.math.Vector2(pos)
         self.tower_type = tower_type
         self.surfacemaker = surfacemaker
 
         self.top_y = 50
         self.image = self.surfacemaker.get_surf(self.tower_type, (TOWER_RECT_WIDTH, TOWER_RECT_HEIGHT), self.top_y)
-        self.rect = self.image.get_rect(center = self.pos)
+        self.rect = self.image.get_rect(center=pos)
+        self.pos = pygame.math.Vector2(self.rect.center)
+        
         self.circle = Circle(self.pos, TILE_WIDTH * 2)
 
         self.is_placed = False
         self.is_shooting = False
+        self.can_upgrade = False
         self.projectile_sprites = pygame.sprite.Group()
         self.projectile_sprites.add(Projectile(self.projectile_sprites, "_".join(self.tower_type.split("_")[:2]), (self.pos.x, self.pos.y - 10)))
 
@@ -49,24 +51,28 @@ class Tower(pygame.sprite.Sprite):
                 self.projectile_sprites.add(Projectile(self.projectile_sprites, "_".join(self.tower_type.split("_")[:2]), (self.pos.x, self.pos.y - 10)))
         self.image = self.surfacemaker.get_surf(self.tower_type, (TOWER_RECT_WIDTH, TOWER_RECT_HEIGHT), abs(self.top_y))
 
-    def upgrade(self, money):
+    def upgrade(self, ui):
         if self.tower_type == "stone_tower_1":
             self.tower_type = "stone_tower_2"
             self.circle.radius = TILE_WIDTH * 2.25
             self.damage = 20
+            ui.money -= 750
         elif self.tower_type == "stone_tower_2":
             self.tower_type = "stone_tower_3"
             self.circle.radius = TILE_WIDTH * 2.5
             self.damage = 40
-
+            ui.money -= 2000
+        
         elif self.tower_type == "rock_tower_1":
             self.tower_type = "rock_tower_2"
             self.circle.radius = TILE_WIDTH * 2.25
             self.damage = 20
+            ui.money -= 1000
         elif self.tower_type == "rock_tower_2":
             self.tower_type = "rock_tower_3"
             self.circle.radius = TILE_WIDTH * 2.5
             self.damage = 40
+            ui.money -= 2500
         self.image = self.surfacemaker.get_surf(self.tower_type, (TOWER_RECT_WIDTH, TOWER_RECT_HEIGHT), self.top_y)
 
     def update(self, pos):

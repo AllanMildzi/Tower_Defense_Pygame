@@ -10,15 +10,13 @@ class Projectile(pygame.sprite.Sprite):
             self.image = pygame.image.load("../graphics/projectile/rock.png").convert_alpha()
             self.image = pygame.transform.scale(self.image, (self.image.get_width() * 0.75, self.image.get_height() * 0.75))
         
-        self.rect = self.image.get_rect(center = pos)
+        self.rect = self.image.get_rect(center=pos)
 
-        self.end = pygame.math.Vector2()
+        self.target = None
         self.can_move = False
-        self.speed = 5
+        self.speed = 10
 
     def move(self):
-        angle = math.atan2((self.end.y - self.rect.y), (self.end.x - self.rect.x))
+        angle = math.atan2((self.target.rect.center[1] - self.rect.center[1]), (self.target.rect.center[0] - self.rect.center[0]))
         self.rect.x += self.speed * math.cos(angle)
         self.rect.y += self.speed * math.sin(angle)
-
-        return math.sqrt(((self.end.x - self.rect.x) ** 2) + ((self.end.y - self.rect.y) ** 2))

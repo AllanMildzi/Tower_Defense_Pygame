@@ -22,25 +22,24 @@ class Enemy(pygame.sprite.Sprite):
 
         self.index = 0
         self.image = self.assets[self.state][self.index]
-        self.rect = self.image.get_rect(topleft = pos)
+        self.rect = self.image.get_rect(topleft=pos)
         
         self.pos = pygame.math.Vector2(self.rect.topleft)
         self.direction = pygame.math.Vector2(1, 1)
         self.speed = 1
-        self.is_target = False
 
-        self.health = ENEMY_MAX_HEALTH
+        self.health = ENEMY_MAX_HEALTH[self.enemy_type]
 
         self.top_path = [pygame.math.Vector2(self.pos),
-                        pygame.math.Vector2(4 * TILE_WIDTH, self.pos.y),
-                        pygame.math.Vector2(4 * TILE_WIDTH, self.pos.y - (2 * TILE_HEIGHT)),
-                        pygame.math.Vector2(6 * TILE_WIDTH, self.pos.y - (2 * TILE_HEIGHT)),
-                        pygame.math.Vector2(6 * TILE_WIDTH, self.pos.y - (3 * TILE_HEIGHT)),
-                        pygame.math.Vector2(10 * TILE_WIDTH, self.pos.y - (3 * TILE_HEIGHT)),
-                        pygame.math.Vector2(10 * TILE_WIDTH, self.pos.y - TILE_HEIGHT),
-                        pygame.math.Vector2(13 * TILE_WIDTH, self.pos.y - TILE_HEIGHT),
-                        pygame.math.Vector2(13 * TILE_WIDTH, self.pos.y - (2 * TILE_HEIGHT)),
-                        pygame.math.Vector2(15 * TILE_WIDTH, self.pos.y - (2 * TILE_HEIGHT))]
+                         pygame.math.Vector2(4 * TILE_WIDTH, self.pos.y),
+                         pygame.math.Vector2(4 * TILE_WIDTH, self.pos.y - (2 * TILE_HEIGHT)),
+                         pygame.math.Vector2(6 * TILE_WIDTH, self.pos.y - (2 * TILE_HEIGHT)),
+                         pygame.math.Vector2(6 * TILE_WIDTH, self.pos.y - (3 * TILE_HEIGHT)),
+                         pygame.math.Vector2(10 * TILE_WIDTH, self.pos.y - (3 * TILE_HEIGHT)),
+                         pygame.math.Vector2(10 * TILE_WIDTH, self.pos.y - TILE_HEIGHT),
+                         pygame.math.Vector2(13 * TILE_WIDTH, self.pos.y - TILE_HEIGHT),
+                         pygame.math.Vector2(13 * TILE_WIDTH, self.pos.y - (2 * TILE_HEIGHT)),
+                         pygame.math.Vector2(15 * TILE_WIDTH, self.pos.y - (2 * TILE_HEIGHT))]
 
         self.bottom_path = [pygame.math.Vector2(self.pos),
                             pygame.math.Vector2(2 * TILE_WIDTH, self.pos.y),
@@ -71,7 +70,7 @@ class Enemy(pygame.sprite.Sprite):
         return True
 
     def draw_health_bar(self):
-        pygame.draw.rect(self.screen, RED, (self.rect.left + 10, self.rect.top, ENEMY_MAX_HEALTH / 2, 10))
+        pygame.draw.rect(self.screen, RED, (self.rect.left + 10, self.rect.top, ENEMY_MAX_HEALTH[self.enemy_type] / 2, 10))
         pygame.draw.rect(self.screen, GREEN, (self.rect.left + 10, self.rect.top, self.health / 2, 10))
 
     def get_damage(self, amount):
@@ -80,6 +79,7 @@ class Enemy(pygame.sprite.Sprite):
             self.state = "die"
             self.index = 0
             self.speed = 0
+            self.is_target = False
 
     def update_path(self):
         current_path = self.path[self.path_index]
